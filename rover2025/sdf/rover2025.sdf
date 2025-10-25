@@ -1,0 +1,248 @@
+<sdf version="1.9">
+<model name="rover2025" canonical_link="robot_base"> <link name="robot_base">
+    <inertial>
+      <mass>21.8</mass> <pose>0 0 0.35 0 0 0</pose> <inertia> <ixx>2.21</ixx> <ixy>0.0</ixy> <ixz>0.0</ixz>
+        <iyy>3.30</iyy> <iyz>0.0</iyz>
+        <izz>3.27</izz>
+      </inertia>
+    </inertial>
+    <collision name="base_collision">
+        <pose>0 0 0.39282 0 0 0</pose> <geometry>
+            <box><size>1.09671 0.77336 0.78564</size></box>
+        </geometry>
+        <surface><contact><ode/></contact><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+    </collision>
+    <visual name="body">
+      <pose>-0.00000 -0.00000 0.00050 -0.00000 0.00000 -0.00000</pose>
+      <geometry>
+        <box><size>1.09671 0.77336 0.78564</size></box>
+      </geometry>
+      </visual>
+  </link>
+
+  <link name="gps_link">
+     <inertial> <mass>0.1</mass> <inertia><ixx>1e-5</ixx><iyy>1e-5</iyy><izz>1e-5</izz></inertia> </inertial>
+     <sensor name="gps_sensor" type="gps">
+       <always_on>1</always_on>
+       <visualize>true</visualize> <update_rate>10</update_rate>
+       <plugin name="gps_plugin" filename="libgazebo_ros_gps_sensor.so">
+         <ros>
+           <namespace>/rover</namespace>
+           <topic>/gps/fix</topic>
+           <frame_id>gps_link</frame_id>
+         </ros>
+         </plugin>
+     </sensor>
+  </link>
+
+  <joint name="gps_joint" type="fixed">
+    <pose relative_to="robot_base">0.09323 0.00000 0.65793 0 0 0</pose> <parent>robot_base</parent>
+    <child>gps_link</child>
+  </joint>
+
+  <link name="imu_link">
+    <inertial> <mass>0.1</mass> <inertia><ixx>1e-5</ixx><iyy>1e-5</iyy><izz>1e-5</izz></inertia> </inertial>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>1</always_on>
+      <visualize>true</visualize> <update_rate>100</update_rate>
+      <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
+         <ros>
+           <namespace>/rover</namespace>
+           <topic>/imu/data</topic>
+           <frame_id>imu_link</frame_id>
+         </ros>
+         <initial_orientation_as_reference>false</initial_orientation_as_reference>
+         </plugin>
+    </sensor>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <pose relative_to="robot_base">0.0 0.0 0.43039 0 0 0</pose>
+    <parent>robot_base</parent>
+    <child>imu_link</child>
+  </joint>
+
+  <link name="front_right_steering_link">
+    <pose relative_to="robot_base">-0.57753 0.32063 0.32476 0 0 -3.14159</pose>
+    <inertial>
+      <mass>4.0</mass> <pose>0 0 0 0 0 0</pose> <inertia> <ixx>0.05</ixx> <ixy>0.0</ixy> <ixz>0.0</ixz>
+        <iyy>0.05</iyy> <iyz>0.0</iyz>
+        <izz>0.05</izz>
+      </inertia>
+    </inertial>
+     <collision name="steering_fr_collision">
+        <pose>-0.00377 0.00334 0.07903 0 0 1.57080</pose> <geometry><box><size>0.1 0.1 0.15</size></box></geometry> <surface><contact><ode/></contact><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+    </collision>
+    <visual name="bone-r-1">
+      <pose>-0.00377 0.00334 0.07903 0.00000 0.00000 1.57080</pose>
+      <geometry>
+        <mesh><uri>../meshes/stl/Science.422.stl</uri><scale>1 1 1</scale></mesh>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="front_right_steering_joint" type="revolute">
+    <parent>robot_base</parent>
+    <child>front_right_steering_link</child>
+    <axis>
+      <xyz>0 0 1</xyz>
+      <limit>
+        <lower>-2.96706</lower>
+        <upper>2.96706</upper>
+        <effort>100.0</effort> <velocity>10.0</velocity> </limit>
+      <dynamics> <damping>0.1</damping> <friction>0.1</friction> </dynamics> </axis>
+  </joint>
+
+  <link name="front_right_wheel_link">
+      <pose relative_to="front_right_steering_link">0 0 -0.15555 0 0 0</pose>
+      <inertial>
+        <mass>3.0</mass> <pose>0 0 0 0 1.5708 0</pose> <inertia> <ixx>0.031</ixx> <ixy>0.0</ixy> <ixz>0.0</ixz>
+            <iyy>0.007</iyy> <iyz>0.0</iyz>
+            <izz>0.031</izz>
+        </inertia>
+      </inertial>
+      <collision name="wheel_fr_collision">
+        <pose>0 0 0 0 1.5708 0</pose> <geometry>
+          <cylinder><radius>0.06742</radius><length>0.32599</length></cylinder>
+        </geometry>
+        <surface> <friction><ode><mu>1.2</mu><mu2>1.0</mu2><slip1>0.0</slip1><slip2>0.0</slip2></ode></friction>
+            <contact><ode><kp>1000000.0</kp><kd>100.0</kd><min_depth>0.001</min_depth></ode></contact>
+        </surface>
+      </collision>
+      <visual name="wheel-r-1">
+        <pose>0 0 0 0 1.5708 0</pose> <geometry>
+          <cylinder><radius>0.06742</radius><length>0.32599</length></cylinder>
+        </geometry>
+        </visual>
+  </link>
+
+  <joint name="front_right_wheel_joint" type="continuous">
+    <parent>front_right_steering_link</parent>
+    <child>front_right_wheel_link</child>
+    <axis>
+      <xyz>0 1 0</xyz> <limit>
+         <effort>100.0</effort> <velocity>10.0</velocity> </limit>
+      <dynamics> <damping>0.1</damping> <friction>0.1</friction> </dynamics>
+    </axis>
+  </joint>
+
+  <link name="front_left_steering_link">
+      <pose relative_to="robot_base">-0.57753 -0.37063 0.32476 0 0 0</pose>
+      <inertial><mass>4.0</mass><pose>0 0 0 0 0 0</pose><inertia><ixx>0.05</ixx><iyy>0.05</iyy><izz>0.05</izz></inertia></inertial>
+      <collision name="steering_fl_collision"><pose>0.00364 0.00244 0.07904 0 0 1.57080</pose><geometry><box><size>0.1 0.1 0.15</size></box></geometry><surface><contact><ode/></contact><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface></collision>
+      <visual name="bone-l-1"><pose>0.00364 0.00244 0.07904 0 0 1.57080</pose><geometry><mesh><uri>../meshes/stl/Science.483.stl</uri><scale>1 1 1</scale></mesh></geometry></visual>
+  </link>
+  <joint name="front_left_steering_joint" type="revolute">
+      <parent>robot_base</parent><child>front_left_steering_link</child>
+      <axis><xyz>0 0 1</xyz><limit><lower>-2.96706</lower><upper>2.96706</upper><effort>100.0</effort><velocity>10.0</velocity></limit><dynamics><damping>0.1</damping><friction>0.1</friction></dynamics></axis>
+  </joint>
+  <link name="front_left_wheel_link">
+      <pose relative_to="front_left_steering_link">0 0 -0.15555 0 0 0</pose>
+      <inertial><mass>3.0</mass><pose>0 0 0 0 1.5708 0</pose><inertia><ixx>0.031</ixx><iyy>0.007</iyy><izz>0.031</izz></inertia></inertial>
+      <collision name="wheel_fl_collision"><pose>0 0 0 0 1.5708 0</pose><geometry><cylinder><radius>0.07091</radius><length>0.32602</length></cylinder></geometry><surface><friction><ode><mu>1.2</mu><mu2>1.0</mu2><slip1>0.0</slip1><slip2>0.0</slip2></ode></friction><contact><ode><kp>1000000.0</kp><kd>100.0</kd><min_depth>0.001</min_depth></ode></contact></surface></collision>
+      <visual name="wheel-l-1"><pose>0 0 0 0 1.5708 0</pose><geometry><cylinder><radius>0.07091</radius><length>0.32602</length></cylinder></geometry></visual>
+  </link>
+  <joint name="front_left_wheel_joint" type="continuous">
+      <parent>front_left_steering_link</parent><child>front_left_wheel_link</child>
+      <axis><xyz>0 1 0</xyz><limit><effort>100.0</effort><velocity>10.0</velocity></limit><dynamics><damping>0.1</damping><friction>0.1</friction></dynamics></axis>
+  </joint>
+
+  <link name="rear_left_steering_link">
+      <pose relative_to="robot_base">0.43705 -0.37063 0.32476 0 0 0</pose>
+      <inertial><mass>4.0</mass><pose>0 0 0 0 0 0</pose><inertia><ixx>0.05</ixx><iyy>0.05</iyy><izz>0.05</izz></inertia></inertial>
+      <collision name="steering_rl_collision"><pose>-0.00056 0.00243 0.06913 0 0 -1.57080</pose><geometry><box><size>0.1 0.1 0.15</size></box></geometry><surface><contact><ode/></contact><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface></collision>
+      <visual name="bone-l-2"><pose>-0.00056 0.00243 0.06913 0 0 -1.57080</pose><geometry><mesh><uri>../meshes/stl/Science.479.stl</uri><scale>1 1 1</scale></mesh></geometry></visual>
+  </link>
+  <joint name="rear_left_steering_joint" type="revolute">
+      <parent>robot_base</parent><child>rear_left_steering_link</child>
+      <axis><xyz>0 0 1</xyz><limit><lower>-2.96706</lower><upper>2.96706</upper><effort>100.0</effort><velocity>10.0</velocity></limit><dynamics><damping>0.1</damping><friction>0.1</friction></dynamics></axis>
+  </joint>
+   <link name="rear_left_wheel_link">
+      <pose relative_to="rear_left_steering_link">0 0 -0.15555 0 0 0</pose>
+      <inertial><mass>3.0</mass><pose>0 0 0 0 1.5708 0</pose><inertia><ixx>0.031</ixx><iyy>0.007</iyy><izz>0.031</izz></inertia></inertial> <collision name="wheel_rl_collision"><pose>0 0 0 0 1.5708 0</pose><geometry><cylinder><radius>0.08897</radius><length>0.32599</length></cylinder></geometry><surface><friction><ode><mu>1.2</mu><mu2>1.0</mu2><slip1>0.0</slip1><slip2>0.0</slip2></ode></friction><contact><ode><kp>1000000.0</kp><kd>100.0</kd><min_depth>0.001</min_depth></ode></contact></surface></collision>
+      <visual name="wheel-l-2"><pose>0 0 0 0 1.5708 0</pose><geometry><cylinder><radius>0.08897</radius><length>0.32599</length></cylinder></geometry></visual>
+  </link>
+  <joint name="rear_left_wheel_joint" type="continuous">
+      <parent>rear_left_steering_link</parent><child>rear_left_wheel_link</child>
+      <axis><xyz>0 1 0</xyz><limit><effort>100.0</effort><velocity>10.0</velocity></limit><dynamics><damping>0.1</damping><friction>0.1</friction></dynamics></axis>
+  </joint>
+
+  <link name="rear_right_steering_link">
+      <pose relative_to="robot_base">0.43705 0.32063 0.32476 0 0 -3.14159</pose>
+      <inertial><mass>4.0</mass><pose>0 0 0 0 0 0</pose><inertia><ixx>0.05</ixx><iyy>0.05</iyy><izz>0.05</izz></inertia></inertial>
+      <collision name="steering_rr_collision"><pose>0.00033 0.00341 0.06913 0 0 -1.57080</pose><geometry><box><size>0.1 0.1 0.15</size></box></geometry><surface><contact><ode/></contact><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface></collision>
+      <visual name="bone-r-2"><pose>0.00033 0.00341 0.06913 0 0 -1.57080</pose><geometry><mesh><uri>../meshes/stl/Science.488.stl</uri><scale>1 1 1</scale></mesh></geometry></visual>
+  </link>
+   <joint name="rear_right_steering_joint" type="revolute">
+      <parent>robot_base</parent><child>rear_right_steering_link</child>
+      <axis><xyz>0 0 1</xyz><limit><lower>-2.96706</lower><upper>2.96706</upper><effort>100.0</effort><velocity>10.0</velocity></limit><dynamics><damping>0.1</damping><friction>0.1</friction></dynamics></axis>
+  </joint>
+  <link name="rear_right_wheel_link">
+      <pose relative_to="rear_right_steering_link">0 0 -0.15555 0 0 0</pose>
+      <inertial><mass>3.0</mass><pose>0 0 0 0 1.5708 0</pose><inertia><ixx>0.031</ixx><iyy>0.007</iyy><izz>0.031</izz></inertia></inertial> <collision name="wheel_rr_collision"><pose>0 0 0 0 1.5708 0</pose><geometry><cylinder><radius>0.07492</radius><length>0.32598</length></cylinder></geometry><surface><friction><ode><mu>1.2</mu><mu2>1.0</mu2><slip1>0.0</slip1><slip2>0.0</slip2></ode></friction><contact><ode><kp>1000000.0</kp><kd>100.0</kd><min_depth>0.001</min_depth></ode></contact></surface></collision>
+      <visual name="wheel-r-2"><pose>0 0 0 0 1.5708 0</pose><geometry><cylinder><radius>0.07492</radius><length>0.32598</length></cylinder></geometry></visual>
+  </link>
+   <joint name="rear_right_wheel_joint" type="continuous">
+      <parent>rear_right_steering_link</parent><child>rear_right_wheel_link</child>
+      <axis><xyz>0 1 0</xyz><limit><effort>100.0</effort><velocity>10.0</velocity></limit><dynamics><damping>0.1</damping><friction>0.1</friction></dynamics></axis>
+  </joint>
+
+  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    <ros>
+        <namespace>/rover</namespace>
+    </ros>
+    <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    <legacyModeNS>true</legacyModeNS> </plugin>
+
+  <transmission name="tran_front_right_steering">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="front_right_steering_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface> </joint>
+    <actuator name="motor_front_right_steering">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+   <transmission name="tran_front_left_steering">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="front_left_steering_joint"><hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface></joint>
+    <actuator name="motor_front_left_steering"><hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface><mechanicalReduction>1</mechanicalReduction></actuator>
+  </transmission>
+   <transmission name="tran_rear_left_steering">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="rear_left_steering_joint"><hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface></joint>
+    <actuator name="motor_rear_left_steering"><hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface><mechanicalReduction>1</mechanicalReduction></actuator>
+  </transmission>
+   <transmission name="tran_rear_right_steering">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="rear_right_steering_joint"><hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface></joint>
+    <actuator name="motor_rear_right_steering"><hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface><mechanicalReduction>1</mechanicalReduction></actuator>
+  </transmission>
+
+  <transmission name="tran_front_right_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="front_right_wheel_joint">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface> </joint>
+    <actuator name="motor_front_right_wheel">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+   <transmission name="tran_front_left_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="front_left_wheel_joint"><hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface></joint>
+    <actuator name="motor_front_left_wheel"><hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface><mechanicalReduction>1</mechanicalReduction></actuator>
+  </transmission>
+   <transmission name="tran_rear_left_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="rear_left_wheel_joint"><hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface></joint>
+    <actuator name="motor_rear_left_wheel"><hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface><mechanicalReduction>1</mechanicalReduction></actuator>
+  </transmission>
+   <transmission name="tran_rear_right_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="rear_right_wheel_joint"><hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface></joint>
+    <actuator name="motor_rear_right_wheel"><hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface><mechanicalReduction>1</mechanicalReduction></actuator>
+  </transmission>
+
+  </model>
+</sdf>

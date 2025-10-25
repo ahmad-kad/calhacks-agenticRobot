@@ -1,0 +1,86 @@
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv
+
+# Python Cache & Compiled Files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.env
+.env.local
+*.sublime-project
+*.sublime-workspace
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+coverage.xml
+*.cover
+
+# Jupyter & Notebooks
+.ipynb_checkpoints/
+*.ipynb
+.jupyter/
+
+# Generated Files & Logs
+*.log
+*.json
+mission_log*.json
+output/
+results/
+*.tmp
+*.bak
+
+# Project-Specific Generated Content
+mission_log*.json
+DELIVERY_*.txt
+IMPLEMENTATION_*.txt
+DEMO_*.txt
+VALIDATION_*.txt
+REAL_MISSION_*.txt
+
+# OS Files
+.DS_Store
+Thumbs.db
+*.swp
+.AppleDouble
+.LSOverride
+
+# Development
+.mypy_cache/
+.dmypy.json
+dmypy.json
+*.pickle
