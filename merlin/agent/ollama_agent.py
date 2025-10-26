@@ -22,25 +22,25 @@ class OllamaAgent(BaseAgent):
         self.model = model
         self.messages: List[Dict[str, str]] = []
         
-        # Available objects in the environment
+        # Available objects in the environment (all on ground level Z=0)
         self.available_objects = {
-            'red': {'name': 'red_cube', 'position': [1.5, 0.5], 'color': 'red'},
-            'green': {'name': 'green_sphere', 'position': [2.0, 1.0], 'color': 'green'},
-            'blue': {'name': 'blue_block', 'position': [1.2, -0.3], 'color': 'blue'},
-            'cube': {'name': 'red_cube', 'position': [1.5, 0.5], 'color': 'red'},
-            'sphere': {'name': 'green_sphere', 'position': [2.0, 1.0], 'color': 'green'},
-            'block': {'name': 'blue_block', 'position': [1.2, -0.3], 'color': 'blue'}
+            'red': {'name': 'red_cube', 'position': [1.5, 0.5, 0.0], 'color': 'red'},
+            'green': {'name': 'green_sphere', 'position': [2.0, 1.0, 0.0], 'color': 'green'},
+            'blue': {'name': 'blue_block', 'position': [1.2, 1.5, 0.0], 'color': 'blue'},
+            'cube': {'name': 'red_cube', 'position': [1.5, 0.5, 0.0], 'color': 'red'},
+            'sphere': {'name': 'green_sphere', 'position': [2.0, 1.0, 0.0], 'color': 'green'},
+            'block': {'name': 'blue_block', 'position': [1.2, 1.5, 0.0], 'color': 'blue'}
         }
 
     def randomize_scene(self) -> None:
         """Randomize object positions for variety in each mission."""
         import random
         
-        # Randomize positions within 0-5 range for x,y,z coordinates
+        # Randomize positions within 0-5 range for x,y coordinates, all objects on ground (Z=0)
         positions = [
-            [random.uniform(0.5, 4.5), random.uniform(0.5, 4.5), random.uniform(0.1, 1.5)],  # red_cube
-            [random.uniform(0.5, 4.5), random.uniform(0.5, 4.5), random.uniform(0.1, 1.5)],  # green_sphere  
-            [random.uniform(0.5, 4.5), random.uniform(0.5, 4.5), random.uniform(0.1, 1.5)]   # blue_block
+            [random.uniform(0.5, 4.5), random.uniform(0.5, 4.5), 0.0],  # red_cube
+            [random.uniform(0.5, 4.5), random.uniform(0.5, 4.5), 0.0],  # green_sphere  
+            [random.uniform(0.5, 4.5), random.uniform(0.5, 4.5), 0.0]   # blue_block
         ]
         
         # Update object positions
