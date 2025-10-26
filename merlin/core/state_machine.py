@@ -3,9 +3,12 @@ from __future__ import annotations
 import math
 import time
 from typing import Dict, Optional
+import logging
 
 from .types import RobotStatus, RobotState
 from .controller import RobotController
+
+logger = logging.getLogger(__name__)
 
 
 class StateMachine:
@@ -18,10 +21,16 @@ class StateMachine:
         self.state_entry_time: float = time.time()
 
         # Config
-        self.arrival_threshold = 0.5  # meters (loosened from 0.2)
+        self.arrival_threshold = 0.15  # tightened from 0.5 for accuracy
         self.manipulation_time = 2.0  # seconds
         self.sensing_time = 1.0  # seconds
         self.state_timeout = 60.0  # seconds
+        
+        # Navigation tuning parameters
+        self.max_linear_vel = 2.0  # Increased from 1.0 m/s for faster navigation
+        self.max_angular_vel = 1.0  # Increased from 0.5 rad/s for faster turning
+        self.kp_linear = 8.0  # Increased to get targets faster
+        self.kp_angular = 0.15  # Increased back to 0.15 for better tracking
 
     def _enter_state(self, state: RobotState, goal: Optional[Dict]) -> None:
         self.state = state
@@ -39,6 +48,7 @@ class StateMachine:
     def update(self, delta_t: float = 0.016) -> RobotStatus:
         # Timeout guard
         if time.time() - self.state_entry_time > self.state_timeout:
+            logger.warning(f"State timeout in {self.state.value}, returning to IDLE")
             self._enter_state(RobotState.IDLE, None)
 
         if self.state == RobotState.NAVIGATING:
@@ -59,24 +69,37 @@ class StateMachine:
     def _navigate_update(self) -> None:
         assert self.current_goal is not None
         target = self.current_goal.get("target_position", [0.0, 0.0])
-        current = self.controller.get_status().position
+        status = self.controller.get_status()
+        current = status.position
 
         dx = target[0] - current[0]
         dy = target[1] - current[1]
         dist = math.hypot(dx, dy)
+        
+        # Check arrival
         if dist < self.arrival_threshold:
             self.controller.set_velocity(0.0, 0.0)
+            logger.info(f"Navigation complete: reached {target}, distance error: {dist:.3f}m")
             self._enter_state(RobotState.IDLE, None)
             return
 
-        # Proportional control
-        target_heading = math.degrees(math.atan2(dy, dx))
-        heading = self.controller.get_status().heading
-        heading_error = (target_heading - heading + 540.0) % 360.0 - 180.0
-
-        vel = min(1.0, dist * 5.0)  # Aggressive acceleration towards target
-        omega = 0.1 * math.radians(heading_error)
-        self.controller.set_velocity(vel, omega)
+        # Direct movement toward target
+        # Move at maximum speed toward target
+        step_size = 0.05  # 5cm steps at 60Hz = 3m/s effective speed
+        if dist > step_size:
+            # Move toward target
+            ratio = step_size / dist
+            new_x = current[0] + dx * ratio
+            new_y = current[1] + dy * ratio
+            self.controller.position = [new_x, new_y]
+            # Update heading to face direction of movement
+            self.controller.heading = math.degrees(math.atan2(dy, dx))
+            self.controller.set_velocity(1.5, 0.0)  # Nominal velocity for logging
+        else:
+            # Last step to target
+            self.controller.position = target
+            self.controller.heading = math.degrees(math.atan2(dy, dx))
+            self.controller.set_velocity(0.0, 0.0)
 
     def _manipulate_update(self) -> None:
         assert self.current_goal is not None

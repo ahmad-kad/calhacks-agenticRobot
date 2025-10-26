@@ -50,11 +50,6 @@ htmlcov/
 coverage.xml
 *.cover
 
-# Jupyter & Notebooks
-.ipynb_checkpoints/
-*.ipynb
-.jupyter/
-
 # Generated Files & Logs
 *.log
 *.json
@@ -65,12 +60,128 @@ results/
 *.bak
 
 # Project-Specific Generated Content
-mission_log*.json
 DELIVERY_*.txt
 IMPLEMENTATION_*.txt
 DEMO_*.txt
 VALIDATION_*.txt
 REAL_MISSION_*.txt
+
+# Documentation & Status Files (Generated)
+*_SUMMARY.md
+*_GUIDE.md
+*_REPORT.md
+*_STATUS.txt
+*_COMPLETE.md
+*_SUCCESS.txt
+*_READY.md
+*_FIX.md
+*_QUICKSTART.md
+*_QUICK_REFERENCE.txt
+*_CHEATSHEET.md
+*_INDEX.md
+*_SETUP.md
+*_VERIFICATION.md
+*_ARTIFACTS.md
+*_DELIVERABLES.txt
+*_FINAL_*.md
+*_TEST_*.md
+*_THIS_WEEK_*.md
+*_WHATS_*.md
+*_WHAT_YOU_*.md
+*_IMPROVED_*.md
+*_LAUNCH_*.md
+*_FEATURE_*.md
+*_SCROLLABLE_*.md
+*_VISUALIZATION_*.md
+*_ACTIVATE_*.md
+*_AGENT_*.md
+*_BUILD_*.md
+*_COMPLETE_*.md
+*_DASHBOARD_*.md
+*_DOCKER_*.md
+*_MISSION_*.md
+*_OLLAMA_*.md
+*_QUICK_*.md
+*_REAL_*.md
+*_SCROLLABLE_*.md
+*_SETUP_*.md
+*_TEACH_*.md
+*_TEST_*.md
+*_VALIDATION_*.md
+*_VISUAL_*.md
+
+# Specific Documentation Files
+ACTIVATE_YOLOV8.md
+BUILD_COMPLETE_SUMMARY.txt
+DELIVERABLES.txt
+DOCKER_QUICK_START.txt
+FINAL_DELIVERY.md
+FINAL_STATUS_ALL_TASKS.md
+LAUNCH_DASHBOARD.md
+QUICK_REFERENCE.txt
+SCROLLABLE_EVENTS_SUMMARY.txt
+WHATS_NEXT.md
+WHAT_YOU_WILL_SEE.md
+
+# Demo & Test Scripts (Generated)
+demo_*.py
+demo_*.sh
+demo_*.json
+test_*.py
+verify_*.sh
+
+# Specific Generated Files
+dashboard_api.py
+start_dashboard.sh
+
+# Examples Directory (Generated)
+examples/
+
+# Docker Demo Scripts
+docker_*.py
+
+# Merlin Subdirectories (Generated)
+merlin/camera/
+merlin/dashboard/
+merlin/navigation/
+merlin/profiling/
+merlin/visualization/
+merlin/utils/data_manifest.py
+merlin/vision/yolov8_detector.py
+
+# Docker & Container Files
+docker-compose.yml
+Dockerfile.*
+setup-docker-*.sh
+
+# Data Directory (Generated Content)
+Data/
+
+# Robotics & AI Specific
+*.pkl
+*.h5
+*.hdf5
+*.model
+*.weights
+*.onnx
+*.tflite
+*.pb
+checkpoints/
+models/
+weights/
+datasets/
+experiments/
+
+# Jupyter & ML Notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Configuration & Environment
+.env
+.env.local
+.env.*.local
+config.json
+secrets.json
 
 # OS Files
 .DS_Store

@@ -162,7 +162,7 @@ def run_real_mission_simplified():
         print("="*80 + "\n")
     
     # Save mission log
-    log_file = "/Users/ahmadkaddoura/calhacks/mission_log_real_vision_success.json"
+    log_file = "mission_log_real_vision_success.json"
     with open(log_file, "w") as f:
         json.dump(mission_log, f, indent=2, default=str)
     

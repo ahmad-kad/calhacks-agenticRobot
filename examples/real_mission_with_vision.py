@@ -249,7 +249,7 @@ def run_real_mission_with_vision():
         print("="*80 + "\n")
     
     # Save mission log
-    log_file = "/Users/ahmadkaddoura/calhacks/mission_log_real_vision.json"
+    log_file = "mission_log_real_vision.json"
     with open(log_file, "w") as f:
         json.dump(mission_log, f, indent=2, default=str)
     

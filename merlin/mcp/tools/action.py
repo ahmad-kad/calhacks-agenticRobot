@@ -67,6 +67,12 @@ class ToolNavigateTo(MCPTool):
 
     def execute(self, x: float, y: float, **kwargs) -> Dict[str, Any]:
         target = [float(x), float(y)]
+        
+        # Reset battery at start of new navigation command
+        # This simulates a fresh battery for each new mission prompt
+        if self.state_machine.state.value == "IDLE":
+            self.state_machine.controller.battery = 95.0
+        
         if not self.state_machine.set_goal("NAVIGATING", {"target_position": target}):
             return {"success": False, "error": "Failed to set goal"}
 
