@@ -11,7 +11,7 @@ def _has(key: str) -> bool:
     return bool(v and v.strip())
 
 
-def create_agent(backend: Literal["claude", "groq", "gemini", "ollama", "simple", "auto"] = "auto") -> BaseAgent:
+def create_agent(backend: Literal["claude", "groq", "gemini", "ollama", "simple", "figma", "letta", "reva", "auto"] = "auto") -> BaseAgent:
     if backend == "claude":
         from .claude_agent import ClaudeAgent
 
@@ -32,6 +32,18 @@ def create_agent(backend: Literal["claude", "groq", "gemini", "ollama", "simple"
         from .simple_agent import SimpleAgent
 
         return SimpleAgent()
+    elif backend == "figma":
+        from .figma_agent import FigmaAgent
+
+        return FigmaAgent()
+    elif backend == "letta":
+        from .letta_agent import LettaAgent
+
+        return LettaAgent()
+    elif backend == "reva":
+        from .reva_agent import RevaAgent
+
+        return RevaAgent()
     elif backend == "auto":
         # Prefer online backends if API keys are present; fallback to Ollama, then SimpleAgent
         order = []
@@ -41,6 +53,12 @@ def create_agent(backend: Literal["claude", "groq", "gemini", "ollama", "simple"
             order.append("claude")
         if _has("GOOGLE_API_KEY"):
             order.append("gemini")
+        if _has("FIGMA_API_KEY"):
+            order.append("figma")
+        if _has("LETTA_API_KEY"):
+            order.append("letta")
+        if _has("REVA_API_KEY"):
+            order.append("reva")
         order.append("ollama")
         order.append("simple")  # Fallback: always works
 
